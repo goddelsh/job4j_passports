@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import ru.job4j.passports_service.models.Passport;
 import ru.job4j.passports_service.repositories.PassportRepository;
 
-import javax.sql.rowset.Predicate;
-import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -46,13 +44,9 @@ public class PassportService {
     }
 
     public List<Passport> findBySeria(String seria) {
-        return StreamSupport.stream(this.passportRepository.findAll().spliterator(), true)
-                .collect(Collectors.toList());
+        return this.passportRepository.findBySeries(seria);
     }
 
-    public List<Passport> findBySeries(String series) {
-        return this.passportRepository.findBySeries(series);
-    }
 
     public List<Passport> findUnavaliabe() {
         return this.passportRepository.findUnavaliabe();

@@ -1,27 +1,26 @@
-package ru.job4j.passports_service.controllers;
+package ru.job4j.passports_client.controllers;
 
-
-import org.hibernate.procedure.ParameterMisuseException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.job4j.passports_service.models.Passport;
-import ru.job4j.passports_service.services.PassportService;
+import ru.job4j.passports_client.models.Passport;
+import ru.job4j.passports_client.services.PassportsAPIService;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/")
-public class PassportController {
-    final private PassportService passportService;
+public class PassportsAPIController {
+    final private PassportsAPIService passportsAPIService;
 
-    public PassportController(PassportService passportService) {
-        this.passportService = passportService;
+    public PassportsAPIController(PassportsAPIService passportsAPIService) {
+        this.passportsAPIService = passportsAPIService;
     }
+
 
     @PostMapping("/save")
     public ResponseEntity<Passport> save(@RequestBody Passport passport) {
-        return new ResponseEntity<>(this.passportService.save(passport), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.passportsAPIService.save(passport), HttpStatus.CREATED);
     }
 
     @PostMapping("/edit")
@@ -30,7 +29,7 @@ public class PassportController {
             throw new IllegalStateException();
         }
         passport.setId(id);
-        return new ResponseEntity<>(this.passportService.update(passport), HttpStatus.OK);
+        return new ResponseEntity<>(this.passportsAPIService.update(passport), HttpStatus.OK);
     }
 
     @PostMapping("/delete")
@@ -38,7 +37,7 @@ public class PassportController {
         if (id == null) {
             throw new IllegalStateException();
         }
-        this.passportService.delete(new Passport(id));
+        this.passportsAPIService.delete(new Passport(id));
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
 
@@ -46,16 +45,16 @@ public class PassportController {
     @GetMapping("/find")
     public List<Passport> find(@RequestParam (required = false)  String seria) {
         return seria == null || seria.isEmpty() ?
-                this.passportService.find() : this.passportService.findBySeria(seria);
+                this.passportsAPIService.find() : this.passportsAPIService.findBySeria(seria);
     }
 
     @GetMapping("/unavaliabe")
     public List<Passport> unavaliabe() {
-        return this.passportService.findUnavaliabe();
+        return this.passportsAPIService.findUnavaliabe();
     }
 
     @GetMapping("/find-replaceable")
     public List<Passport> findReplaceable() {
-        return this.passportService.findReplaceable();
+        return this.passportsAPIService.findReplaceable();
     }
 }
